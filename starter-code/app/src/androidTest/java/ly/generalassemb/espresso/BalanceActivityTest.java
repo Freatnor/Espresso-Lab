@@ -13,6 +13,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.allOf;
+
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -76,7 +80,16 @@ public class BalanceActivityTest {
 
     @Test
     public void testTransactionsVisible() throws Exception {
-        
+        testDeposit("12.50", "$12.50");
+        testDeposit("12.50", "$25.00");
+        testWithdraw("25.00", "$0.00");
+        testWithdraw("25.00", "-$25.00");
+        //allOf(is(instanceOf(String.class)), is("$12.50"))
+//        onData(allOf(is(instanceOf(String.class)), is("$12.50"))).onView(withId(R.id.balance_item_amountmatches(withText("Deposit")));
+//        onData(allOf(is(instanceOf(String.class)), is("$25.00"))).check(matches(withText("Withdrawal")));
+
 
     }
+
+
 }
