@@ -1,6 +1,7 @@
 package ly.generalassemb.espresso;
 
 
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import static android.support.test.espresso.Espresso.onView;
@@ -14,13 +15,17 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.collection.IsMapContaining.hasEntry;
 
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 
 /**
@@ -86,12 +91,27 @@ public class BalanceActivityTest {
         testWithdraw("25.00", "$0.00");
         testWithdraw("25.00", "-$25.00");
 
-        onData(allOf(is(instanceOf(String.class)), is(("$12.50"))))
+        onData(withText("$12.50"))
                 .onChildView(withId(R.id.balance_item_description)).check(matches(withText("Deposit")));
-        onData(allOf(is(instanceOf(String.class)), is(("$25.00"))))
+        onData(allOf(is(instanceOf(Transaction.class)), withContent("25.00")))
                 .onChildView(withId(R.id.balance_item_description)).check(matches(withText("Withdrawal")));
 
 
+    }
+
+
+    public static BoundedMatcher withContent(final String content) {
+        return new BoundedMatcher<Transaction>() {
+            @Override
+            public void describeTo(org.hamcrest.Description description) {
+
+            }
+
+            @Override
+            protected boolean matchesSafely(Transaction) {
+                return false;
+            }
+        }
     }
 
 
